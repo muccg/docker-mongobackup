@@ -8,7 +8,7 @@
 : ${DOWEEKLY:="6"}
 : ${CLEANUP:="yes"}
 : ${LATEST:="yes"}
-: ${LATESTLINK:="yes"}
+: ${LATESTLINK:="no"}
 : ${OPLOG:="yes"}
 : ${REPLICAONSLAVE:="yes"}
 
