@@ -1,5 +1,5 @@
 #
-FROM mongo:2.6
+FROM mongo:3.0
 MAINTAINER https://github.com/muccg/
 
 RUN mkdir -p /data \
