@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # MongoDB Backup Script
 # VER. 0.10
@@ -266,6 +266,7 @@ VER=0.10                                          # Version Number
 LOGFILE=$BACKUPDIR/$DBHOST-`date +%H%M`.log       # Logfile Name
 LOGERR=$BACKUPDIR/ERRORS_$DBHOST-`date +%H%M`.log # Logfile Name
 BACKUPFILES=""
+PASSPHRASE=""                                      # set to something for encryption
 #OPT=""                                            # OPT string for use with mongodump
 
 # Do we need to use a username/password?
@@ -357,6 +358,23 @@ function select_secondary_member {
         # Ugly hack to return value from a Bash function ...
         eval $__return="'$secondary'"
     fi
+}
+
+# Encrypt all files in the file
+encrypt () {
+    target="$1"
+
+    if [ x"$PASSPHRASE" = x ]; then
+      return
+    fi
+
+    if [ ! -d "$target" ]; then
+      echo "abort: $target is not a directory"
+      exit 1
+    fi
+
+    find "$target" -type f -exec openssl enc -aes-256-cbc -e -in {} -out {}.enc -pass pass:"$PASSPHRASE" \;
+    #find "$target" -type f -a -not -name "*.enc" -exec rm {} \;
 }
 
 # Compression function plus latest copy
@@ -469,7 +487,7 @@ else
     echo
     FILE="$BACKUPDIR/daily/$DATE.$DOW"
 fi
-dbdump $FILE && compression $FILE
+dbdump $FILE && encrypt $FILE && compression $FILE
 echo ----------------------------------------------------------------------
 echo Backup End Time `date`
 echo ======================================================================
