@@ -364,6 +364,8 @@ function select_secondary_member {
 encrypt () {
     target="$1"
 
+    echo "encrypt; $PASSPHRASE"
+
     if [ x"$PASSPHRASE" = x ]; then
       return
     fi
@@ -487,6 +489,7 @@ else
     echo
     FILE="$BACKUPDIR/daily/$DATE.$DOW"
 fi
+echo "debug: $FILE"
 dbdump $FILE && encrypt $FILE && compression $FILE
 echo ----------------------------------------------------------------------
 echo Backup End Time `date`
