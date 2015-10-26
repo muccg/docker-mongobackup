@@ -266,7 +266,7 @@ VER=0.10                                          # Version Number
 LOGFILE=$BACKUPDIR/$DBHOST-`date +%H%M`.log       # Logfile Name
 LOGERR=$BACKUPDIR/ERRORS_$DBHOST-`date +%H%M`.log # Logfile Name
 BACKUPFILES=""
-PASSPHRASE=""                                      # set to something for encryption
+#PASSPHRASE=""                                      # set to something for encryption
 #OPT=""                                            # OPT string for use with mongodump
 
 # Do we need to use a username/password?
