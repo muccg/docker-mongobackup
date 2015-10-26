@@ -75,7 +75,7 @@
 #DOWEEKLY=6
 
 # Choose Compression type. (gzip or bzip2)
-#COMP="gzip"
+COMP="gzip"
 
 # Choose if the uncompressed folder should be deleted after compression has completed
 #CLEANUP="yes"
