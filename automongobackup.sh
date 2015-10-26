@@ -370,13 +370,17 @@ encrypt () {
       return
     fi
 
+    if [ x"$target" = x ]; then
+      return
+    fi
+
     if [ ! -d "$target" ]; then
       echo "abort: $target is not a directory"
       exit 1
     fi
 
     find "$target" -type f -exec openssl enc -aes-256-cbc -e -in {} -out {}.enc -pass pass:"$PASSPHRASE" \;
-    #find "$target" -type f -a -not -name "*.enc" -exec rm {} \;
+    find "$target" -type f -a -not -name "*.enc" -exec rm {} \;
 }
 
 # Compression function plus latest copy
