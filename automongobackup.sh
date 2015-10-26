@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # MongoDB Backup Script
 # VER. 0.10
