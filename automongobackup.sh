@@ -360,27 +360,7 @@ function select_secondary_member {
     fi
 }
 
-# Encrypt all files in the file
-encrypt () {
-    target="$1"
-
-    echo "encrypt; $PASSPHRASE"
-
-    if [ x"$PASSPHRASE" = x ]; then
-      return
-    fi
-
-    if [ x"$target" = x ]; then
-      return
-    fi
-
-    if [ ! -d "$target" ]; then
-      echo "abort: $target is not a directory"
-      exit 1
-    fi
-}
-
-# Compression function plus latest copy
+# Compression function plus latest copy and encryption
 compression () {
     SUFFIX=""
     dir=$(dirname $1)
@@ -391,9 +371,11 @@ compression () {
         echo Tar and $COMP to "$file$SUFFIX"
         cd "$dir" && tar -cf - "$file" | $COMP -c > "$file$SUFFIX"
         rm -rf "$file"
-        openssl enc -aes-256-cbc -e -in "$file$SUFFIX" -out "$file$SUFFIX".enc -pass pass:"$PASSPHRASE"
-        rm -f "$file$SUFFIX"
-        SUFFIX="$SUFFIX".enc
+        if [ x"$PASSPHRASE" != x ]; then
+          openssl enc -aes-256-cbc -e -in "$file$SUFFIX" -out "$file$SUFFIX".enc -pass pass:"$PASSPHRASE"
+          rm -f "$file$SUFFIX"
+          SUFFIX="$SUFFIX".enc
+        fi
         cd - >/dev/null || return 1
     else
         echo "No compression option set, check advanced settings"
@@ -495,7 +477,7 @@ else
     FILE="$BACKUPDIR/daily/$DATE.$DOW"
 fi
 echo "debug: $FILE"
-dbdump $FILE && encrypt $FILE && compression $FILE
+dbdump $FILE && compression $FILE
 echo ----------------------------------------------------------------------
 echo Backup End Time `date`
 echo ======================================================================
