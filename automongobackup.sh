@@ -378,9 +378,6 @@ encrypt () {
       echo "abort: $target is not a directory"
       exit 1
     fi
-
-    find "$target" -type f -exec openssl enc -aes-256-cbc -e -in {} -out {}.enc -pass pass:"$PASSPHRASE" \;
-    find "$target" -type f -a -not -name "*.enc" -exec rm {} \;
 }
 
 # Compression function plus latest copy
@@ -393,6 +390,9 @@ compression () {
         [ "$COMP" = "bzip2" ] && SUFFIX=".tar.bz2"
         echo Tar and $COMP to "$file$SUFFIX"
         cd "$dir" && tar -cf - "$file" | $COMP -c > "$file$SUFFIX"
+        rm -rf "$file"
+        openssl enc -aes-256-cbc -e -in "$file$SUFFIX" -out "$file$SUFFIX".enc -pass pass:"$PASSPHRASE"
+        SUFFIX="$SUFFIX".enc
         cd - >/dev/null || return 1
     else
         echo "No compression option set, check advanced settings"
