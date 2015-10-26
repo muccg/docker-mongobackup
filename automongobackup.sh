@@ -392,6 +392,7 @@ compression () {
         cd "$dir" && tar -cf - "$file" | $COMP -c > "$file$SUFFIX"
         rm -rf "$file"
         openssl enc -aes-256-cbc -e -in "$file$SUFFIX" -out "$file$SUFFIX".enc -pass pass:"$PASSPHRASE"
+        rm -f "$file$SUFFIX"
         SUFFIX="$SUFFIX".enc
         cd - >/dev/null || return 1
     else
